@@ -1,0 +1,41 @@
+# --- Outils, editeurs et caches (ne jamais versionner) ---
+.obsidian/
+.obsidian/*
+.claude/
+.cursor/
+.idea/
+.vscode/
+*.code-workspace
+.settings/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# --- Node / JavaScript ---
+node_modules/
+.npm/
+.yarn/
+.pnpm-store/
+.next/
+.nuxt/
+.cache/
+
+# --- Systeme, Office et fichiers temporaires ---
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+*.tmp
+*.bak
+*.log
