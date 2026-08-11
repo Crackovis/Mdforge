@@ -1,0 +1,24 @@
+# H-ROS-MANIFEST-v1 — Infrastructure instance manifest
+# Owner: Crackovis/Mdforge (mount Technology/Infrastructure/Mdforge)
+# Validated against: _/agents/schemas/manifest.schema.json
+id: infrastructure:mdforge
+type: infrastructure
+status: active
+owner: technology:infrastructure
+parent_ref: null
+linked_context_refs:
+  - publication:wust-master-thesis-v03
+repository_refs:
+  - name: Crackovis/Mdforge
+    url: https://github.com/Crackovis/Mdforge.git
+    mount_path: Technology/Infrastructure/Mdforge
+memory_refs: []
+domain_skill_refs:
+  - document-publication
+workflow_skill_refs:
+  - mddocx
+privacy_or_storage_class: C1
+lifecycle:
+  created: "2026-08-11"
+  last_modified: "2026-08-11"
+  archive_policy: keep_at_owner
