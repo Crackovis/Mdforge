@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mdforge-cli"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["mdforge-application==0.1.0", "rich>=13.9", "typer>=0.15"]
+
+[project.scripts]
+mdforge = "mdforge_cli:app"
+
+[tool.uv.sources]
+mdforge-application = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mdforge_cli"]

@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mdforge-external-sample"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = ["mdforge-contracts==0.1.0"]
+
+[project.entry-points."mdforge.capabilities"]
+external-sample = "mdforge_external_sample:plugin"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mdforge_external_sample"]

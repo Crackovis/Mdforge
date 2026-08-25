@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mdforge-reference-capabilities"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["mdforge-contracts==0.1.0"]
+
+[project.entry-points."mdforge.capabilities"]
+reference-echo = "mdforge_reference:echo_plugin"
+reference-consumer = "mdforge_reference:consumer_plugin"
+reference-failing = "mdforge_reference:failing_plugin"
+
+[tool.uv.sources]
+mdforge-contracts = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mdforge_reference"]

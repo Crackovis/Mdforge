@@ -1,0 +1,45 @@
+[project]
+name = "mdforge-workspace"
+version = "0.1.0"
+description = "MDForge modular document forge workspace"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "build>=1.2.2",
+  "mypy>=1.15",
+  "packaging>=24.2",
+  "pydantic>=2.10",
+  "pytest>=8.3",
+  "ruff>=0.9",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = [
+  "packages/contracts",
+  "packages/kernel",
+  "packages/application",
+  "packages/cli",
+  "packages/plugins/reference",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+pretty = true

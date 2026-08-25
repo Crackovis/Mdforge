@@ -1,0 +1,12 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mdforge-contracts"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = ["packaging>=24.2", "pydantic>=2.10"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mdforge_contracts"]

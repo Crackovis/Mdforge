@@ -7,6 +7,7 @@
 .vscode/
 *.code-workspace
 .settings/
+.local/
 
 # --- Python ---
 __pycache__/
@@ -21,6 +22,8 @@ __pycache__/
 .venv/
 venv/
 .ipynb_checkpoints/
+build/
+dist/
 
 # --- Node / JavaScript ---
 node_modules/

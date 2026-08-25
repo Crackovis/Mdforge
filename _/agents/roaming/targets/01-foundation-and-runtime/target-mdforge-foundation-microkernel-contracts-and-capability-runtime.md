@@ -2,7 +2,7 @@
 name: target-mdforge-foundation-microkernel-contracts-and-capability-runtime
 memory_type: target
 scope: mdforge
-status: draft
+status: closed
 authority: target
 profile: B
 created: 2026-08-25
@@ -445,17 +445,17 @@ La traceback brute peut être conservée pour debug développeur, mais ne consti
 
 ## T1-1 — Workspace Python et contrats constitutionnels
 
-- [ ] **Promesse** : MDForge possède un workspace Python reproductible et un package `contracts` ne dépendant d'aucune implémentation runtime.
+- [x] **Promesse** : MDForge possède un workspace Python reproductible et un package `contracts` ne dépendant d'aucune implémentation runtime.
 
 ### Lots
 
 #### Lot A — Workspace reproductible
 
-- [ ] `pyproject.toml` racine et workspace `uv`.
-- [ ] baseline Python `>=3.12`.
-- [ ] lockfile reproductible.
-- [ ] commandes standardisées de test/lint/typecheck.
-- [ ] installation propre dans un environnement vierge.
+- [x] `pyproject.toml` racine et workspace `uv`.
+- [x] baseline Python `>=3.12`.
+- [x] lockfile reproductible.
+- [x] commandes standardisées de test/lint/typecheck.
+- [x] installation propre dans un environnement vierge.
 
 `owned_paths` :
 
@@ -467,14 +467,14 @@ La traceback brute peut être conservée pour debug développeur, mais ne consti
 
 #### Lot B — Contrats
 
-- [ ] `CapabilityIdentity`.
-- [ ] `CapabilityManifest`.
-- [ ] `ServiceContract` / `Requirement`.
-- [ ] `CapabilityProvider` Protocol.
-- [ ] `RuntimeContext` Protocol minimal.
-- [ ] `RuntimeEvent`.
-- [ ] `StructuredError`.
-- [ ] règles de versioning documentées.
+- [x] `CapabilityIdentity`.
+- [x] `CapabilityManifest`.
+- [x] `ServiceContract` / `Requirement`.
+- [x] `CapabilityProvider` Protocol.
+- [x] `RuntimeContext` Protocol minimal.
+- [x] `RuntimeEvent`.
+- [x] `StructuredError`.
+- [x] règles de versioning documentées.
 
 `owned_paths` :
 
@@ -485,12 +485,12 @@ La traceback brute peut être conservée pour debug développeur, mais ne consti
 
 #### Lot C — Contract fitness suite
 
-- [ ] manifests valides/incomplets ;
-- [ ] IDs invalides ;
-- [ ] versions invalides ;
-- [ ] requirements invalides ;
-- [ ] sérialisation déterministe ;
-- [ ] aucun import depuis `kernel` ou une capability.
+- [x] manifests valides/incomplets ;
+- [x] IDs invalides ;
+- [x] versions invalides ;
+- [x] requirements invalides ;
+- [x] sérialisation déterministe ;
+- [x] aucun import depuis `kernel` ou une capability.
 
 `owned_paths` :
 
@@ -515,16 +515,16 @@ dependency-boundary check PASS
 
 ## T1-2 — Capability Registry & discovery native
 
-- [ ] **Promesse** : MDForge découvre et catalogue des capabilities Python natives sans connaître leurs implémentations à l'avance.
+- [x] **Promesse** : MDForge découvre et catalogue des capabilities Python natives sans connaître leurs implémentations à l'avance.
 
 ### Lots parallélisables après T1-1
 
 #### Lot A — Discovery adapters
 
-- [ ] discovery des capabilities embarquées ;
-- [ ] discovery via Python entry points `mdforge.capabilities` ;
-- [ ] normalisation vers `CapabilityManifest` ;
-- [ ] collecte d'erreurs de découverte sans crash global.
+- [x] discovery des capabilities embarquées ;
+- [x] discovery via Python entry points `mdforge.capabilities` ;
+- [x] normalisation vers `CapabilityManifest` ;
+- [x] collecte d'erreurs de découverte sans crash global.
 
 `owned_paths` :
 
@@ -534,11 +534,11 @@ dependency-boundary check PASS
 
 #### Lot B — Registry
 
-- [ ] enregistrement déterministe ;
-- [ ] détection d'ID dupliqué ;
-- [ ] index par capability et par service fourni ;
-- [ ] snapshot inspectable du registry ;
-- [ ] aucun chargement de logique documentaire.
+- [x] enregistrement déterministe ;
+- [x] détection d'ID dupliqué ;
+- [x] index par capability et par service fourni ;
+- [x] snapshot inspectable du registry ;
+- [x] aucun chargement de logique documentaire.
 
 `owned_paths` :
 
@@ -580,19 +580,19 @@ broken plugin does not crash discovery of healthy plugins
 
 ## T1-3 — Résolution de dépendances & Service Context
 
-- [ ] **Promesse** : le registry peut devenir un graphe exécutable de services sans dépendance implicite entre implementations.
+- [x] **Promesse** : le registry peut devenir un graphe exécutable de services sans dépendance implicite entre implementations.
 
 ### Lots
 
 #### Lot A — Dependency resolver
 
-- [ ] résolution de `requires` ;
-- [ ] contraintes de versions ;
-- [ ] optional requirements ;
-- [ ] cycle detection ;
-- [ ] missing-provider detection ;
-- [ ] ambiguous-provider detection ;
-- [ ] ordre topologique stable.
+- [x] résolution de `requires` ;
+- [x] contraintes de versions ;
+- [x] optional requirements ;
+- [x] cycle detection ;
+- [x] missing-provider detection ;
+- [x] ambiguous-provider detection ;
+- [x] ordre topologique stable.
 
 `owned_paths` :
 
@@ -602,10 +602,10 @@ broken plugin does not crash discovery of healthy plugins
 
 #### Lot B — Service Context
 
-- [ ] construction d'un contexte borné par capability ;
-- [ ] injection des dépendances résolues par contrat ;
-- [ ] lookup impossible pour un service non déclaré ;
-- [ ] aucun accès implicite à un container global.
+- [x] construction d'un contexte borné par capability ;
+- [x] injection des dépendances résolues par contrat ;
+- [x] lookup impossible pour un service non déclaré ;
+- [x] aucun accès implicite à un container global.
 
 `owned_paths` :
 
@@ -645,7 +645,7 @@ F and G both provide service.shared
 
 ## T1-4 — Lifecycle transactionnel et confinement des échecs
 
-- [ ] **Promesse** : le runtime peut activer et arrêter un graphe résolu en conservant un état connu même lorsqu'une capability échoue.
+- [x] **Promesse** : le runtime peut activer et arrêter un graphe résolu en conservant un état connu même lorsqu'une capability échoue.
 
 ### Machine d'état minimale
 
@@ -665,11 +665,11 @@ failed
 
 #### Lot A — Lifecycle engine
 
-- [ ] `prepare` ;
-- [ ] start dans l'ordre topologique ;
-- [ ] stop en ordre inverse ;
-- [ ] définition explicite de l'idempotence start/stop ;
-- [ ] timeout policy seulement si nécessaire et prouvée.
+- [x] `prepare` ;
+- [x] start dans l'ordre topologique ;
+- [x] stop en ordre inverse ;
+- [x] définition explicite de l'idempotence start/stop ;
+- [x] timeout policy seulement si nécessaire et prouvée.
 
 `owned_paths` :
 
@@ -679,10 +679,10 @@ failed
 
 #### Lot B — Transaction / rollback
 
-- [ ] journal des capabilities activées dans la transaction ;
-- [ ] si `N` échoue, rollback de `N-1...1` ;
-- [ ] erreurs de rollback agrégées sans masquer l'erreur primaire ;
-- [ ] runtime final classifié `ready`, `failed-clean`, ou `failed-dirty`.
+- [x] journal des capabilities activées dans la transaction ;
+- [x] si `N` échoue, rollback de `N-1...1` ;
+- [x] erreurs de rollback agrégées sans masquer l'erreur primaire ;
+- [x] runtime final classifié `ready`, `failed-clean`, ou `failed-dirty`.
 
 `owned_paths` :
 
@@ -692,11 +692,11 @@ failed
 
 #### Lot C — Failure fixtures
 
-- [ ] failure during prepare ;
-- [ ] failure during start ;
-- [ ] failure during stop ;
-- [ ] partial rollback failure ;
-- [ ] healthy restart after clean failure.
+- [x] failure during prepare ;
+- [x] failure during start ;
+- [x] failure during stop ;
+- [x] partial rollback failure ;
+- [x] healthy restart after clean failure.
 
 `owned_paths` :
 
@@ -723,7 +723,7 @@ no capability remains accidentally active
 
 ## T1-5 — Composition primitive : bundles runtime
 
-- [ ] **Promesse** : un runtime MDForge peut être défini comme une composition déclarative de capabilities, sans encoder un type de produit dans le kernel.
+- [x] **Promesse** : un runtime MDForge peut être défini comme une composition déclarative de capabilities, sans encoder un type de produit dans le kernel.
 
 T1 ne livre pas encore les Publication Profiles de T2/T3.
 
@@ -740,11 +740,11 @@ RuntimeBundle
 
 #### Lot A — Bundle contract
 
-- [ ] identity/version du bundle ;
-- [ ] liste de capabilities requises ;
-- [ ] sélection explicite d'un provider en cas de pluralité ;
-- [ ] overlay de configuration borné ;
-- [ ] résolution déterministe.
+- [x] identity/version du bundle ;
+- [x] liste de capabilities requises ;
+- [x] sélection explicite d'un provider en cas de pluralité ;
+- [x] overlay de configuration borné ;
+- [x] résolution déterministe.
 
 `owned_paths` :
 
@@ -755,10 +755,10 @@ RuntimeBundle
 
 #### Lot B — Bundle resolver
 
-- [ ] bundle → capability graph ;
-- [ ] bundle invalide → diagnostic ;
-- [ ] capability absente → diagnostic ;
-- [ ] aucune notion `thesis`, `docx`, `markdown`.
+- [x] bundle → capability graph ;
+- [x] bundle invalide → diagnostic ;
+- [x] capability absente → diagnostic ;
+- [x] aucune notion `thesis`, `docx`, `markdown`.
 
 `owned_paths` :
 
@@ -779,7 +779,7 @@ Le kernel ne change pas entre les deux compositions.
 
 ## T1-6 — Application Runtime API & diagnostics humains structurés
 
-- [ ] **Promesse** : les futurs CLI, UI et MCP disposent déjà d'une seule API applicative pour démarrer et inspecter MDForge.
+- [x] **Promesse** : les futurs CLI, UI et MCP disposent déjà d'une seule API applicative pour démarrer et inspecter MDForge.
 
 ### Application API minimale
 
@@ -800,10 +800,10 @@ Les noms finaux peuvent varier ; les responsabilités ne doivent pas fuir dans l
 
 #### Lot A — Application layer
 
-- [ ] façade stable au-dessus du kernel ;
-- [ ] DTOs structurés ;
-- [ ] aucun Rich/Typer dans l'application ;
-- [ ] aucune dépendance à MDDOCX.
+- [x] façade stable au-dessus du kernel ;
+- [x] DTOs structurés ;
+- [x] aucun Rich/Typer dans l'application ;
+- [x] aucune dépendance à MDDOCX.
 
 `owned_paths` :
 
@@ -836,11 +836,11 @@ La sortie humaine peut utiliser Typer + Rich.
 
 #### Lot C — Observability contract
 
-- [ ] event sink testable ;
-- [ ] diagnostics corrélés à `capability_id` ;
-- [ ] erreurs actionnables ;
-- [ ] sortie JSON stable ;
-- [ ] traceback uniquement en mode développeur explicite.
+- [x] event sink testable ;
+- [x] diagnostics corrélés à `capability_id` ;
+- [x] erreurs actionnables ;
+- [x] sortie JSON stable ;
+- [x] traceback uniquement en mode développeur explicite.
 
 `owned_paths` :
 
@@ -871,7 +871,7 @@ doivent consommer la **même Application API** et exposer la même vérité runt
 
 ## T1-7 — Acceptance constitutionnelle, packaging & handoff vers T2
 
-- [ ] **Promesse** : le socle est suffisamment stable, portable et prouvé pour que T2 développe Project Discovery comme capability sans modifier les fondations.
+- [x] **Promesse** : le socle est suffisamment stable, portable et prouvé pour que T2 développe Project Discovery comme capability sans modifier les fondations.
 
 ### Acceptance scenario obligatoire
 
@@ -912,16 +912,16 @@ reference.failing
 
 ### Gates qualité
 
-- [ ] tests unitaires contracts/kernel ;
-- [ ] tests intégration runtime ;
-- [ ] tests acceptance fresh environment ;
-- [ ] Ruff PASS ;
-- [ ] strict typecheck PASS ;
-- [ ] package build PASS ;
-- [ ] installation du package construit PASS ;
-- [ ] Windows/Linux compatibles pour le corpus headless ou écarts explicitement prouvés ;
-- [ ] aucun besoin de Word/COM ;
-- [ ] aucun besoin de daemon/base distante.
+- [x] tests unitaires contracts/kernel ;
+- [x] tests intégration runtime ;
+- [x] tests acceptance fresh environment ;
+- [x] Ruff PASS ;
+- [x] strict typecheck PASS ;
+- [x] package build PASS ;
+- [x] installation du package construit PASS ;
+- [x] Windows/Linux compatibles pour le corpus headless ou écarts explicitement prouvés ;
+- [x] aucun besoin de Word/COM ;
+- [x] aucun besoin de daemon/base distante.
 
 ### Fitness functions constitutionnelles
 
@@ -1172,26 +1172,26 @@ Le handoff final doit contenir au minimum :
 
 T1 est **CLOS** seulement si toutes les conditions suivantes sont vraies :
 
-- [ ] workspace Python reproductible installé depuis zéro ;
-- [ ] contrats capability/service/runtime versionnés et testés ;
-- [ ] discovery native par entry points opérationnelle ;
-- [ ] Capability Registry inspectable ;
-- [ ] dependency resolver déterministe ;
-- [ ] cycles/missing/ambiguities diagnostiqués ;
-- [ ] Service Context borné et typé ;
-- [ ] lifecycle start/stop fonctionnel ;
-- [ ] rollback d'activation partielle prouvé ;
-- [ ] RuntimeBundle générique opérationnel ;
-- [ ] Application Runtime API unique ;
-- [ ] `mdforge doctor` opérationnel ;
-- [ ] `mdforge capabilities` opérationnel ;
-- [ ] sorties structurées machine disponibles ;
-- [ ] reference capability ajoutable sans patch kernel ;
-- [ ] reference capability retirable sans patch kernel ;
-- [ ] package build + fresh install smoke verts ;
-- [ ] tests/lint/typecheck verts ;
-- [ ] MDDOCX intact ;
-- [ ] handoff T2 rédigé avec frontières gelées.
+- [x] workspace Python reproductible installé depuis zéro ;
+- [x] contrats capability/service/runtime versionnés et testés ;
+- [x] discovery native par entry points opérationnelle ;
+- [x] Capability Registry inspectable ;
+- [x] dependency resolver déterministe ;
+- [x] cycles/missing/ambiguities diagnostiqués ;
+- [x] Service Context borné et typé ;
+- [x] lifecycle start/stop fonctionnel ;
+- [x] rollback d'activation partielle prouvé ;
+- [x] RuntimeBundle générique opérationnel ;
+- [x] Application Runtime API unique ;
+- [x] `mdforge doctor` opérationnel ;
+- [x] `mdforge capabilities` opérationnel ;
+- [x] sorties structurées machine disponibles ;
+- [x] reference capability ajoutable sans patch kernel ;
+- [x] reference capability retirable sans patch kernel ;
+- [x] package build + fresh install smoke verts ;
+- [x] tests/lint/typecheck verts ;
+- [x] MDDOCX intact ;
+- [x] handoff T2 rédigé avec frontières gelées.
 
 ### Test constitutionnel final
 
@@ -1240,3 +1240,19 @@ peuvent se construire sur des frontières déjà stables
 La valeur de T1 est précisément de rendre T2 et T3 **rapides à développer sans dette constitutionnelle**.
 
 > **À la fin de T1, MDForge n'est pas encore une forge documentaire complète ; il est devenu une plateforme crédible sur laquelle la forge peut croître sans devoir réécrire son cœur à chaque nouvelle capability.**
+
+---
+
+## 15. Preuve de clôture T1
+
+Preuves durables de la clôture :
+
+- handoff : `docs/architecture/t1-foundation-handoff.md` ;
+- qualité : `TASK-FA0230ADAEB5` — `40 passed`, Ruff PASS, mypy strict PASS ;
+- build/fresh runtime : `TASK-CB326366F4F4` — wheels `py3-none-any`, fresh install, doctor READY, événements `discovered/validated/resolved`, rollback propre ;
+- constitution plugin : `TASK-843AFF7A0E30` — `external.sample` installable, découvrable, exécutable et retirable sans patch kernel ;
+- hash kernel invariant avant/après plugin : `087d06ec1700843ed4ac8b46948da4ac6801b306c17ca2b44219de2da6a4349c` ;
+- MDDOCX inchangé : `92095562b1d9b421c3c5cc7f761c16b74115c5a7` ;
+- Windows natif non disponible sur le worker courant : écart de preuve explicitement borné par wheels Python purs et fitness functions sans dépendance plateforme.
+
+Le test constitutionnel final est donc satisfait : une capability Python tierce peut rejoindre puis quitter MDForge par le seul contrat public et l'entry point `mdforge.capabilities`, sans modification du kernel.
