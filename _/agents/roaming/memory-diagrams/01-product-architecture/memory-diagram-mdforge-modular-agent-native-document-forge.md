@@ -19,6 +19,8 @@ root_references:
   - _/agents/INDEX.md
   - _/agents/roaming/README.md
   - _/agents/roaming/memory-diagrams/00-CANONICAL-READING-ORDER.md
+design_inputs:
+  - _/agents/roaming/targets/01-project-discovery/target-mdforge-project-discovery.md
 research_inputs:
   - https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md
   - https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/
@@ -75,6 +77,8 @@ AGENTS.md
 
 Quand le repository est monté dans TAKOUDJOU, les contrats institutionnels de Researches gouvernent la coordination et PACTE ; MDForge ne les recopie pas.
 
+Le Target historique `target-mdforge-project-discovery` est un **design input** : il capture des cas d'usage opérateur précieux, mais ne prime pas sur le présent Memory Diagram pour les choix architecturaux. Ses intentions UX sont absorbées ici puis reformulées selon la doctrine cible.
+
 ## 3. Préséance
 
 ```text
@@ -103,6 +107,8 @@ Une API, une stack ou une capability imaginée ici n'existe pas tant qu'un Targe
 | **Service Context** | graphe runtime des services/capabilities montés et de leurs dépendances |
 | **Profile / Bundle** | composition nommée et versionnée de capabilities et de configuration |
 | **Project** | contexte d'une production : sources, configuration, profils, assets, références, politiques et outputs attendus |
+| **Project Discovery** | passage contrôlé du répertoire physique et de ses conventions vers une interprétation logique inspectable du projet |
+| **Source Pattern** | description explicite ou inférée de la manière dont une arborescence physique doit être interprétée |
 | **Document Graph** | représentation structurée du contenu et de ses relations, indépendante du simple layout de fichiers |
 | **Publication Profile** | conventions d'un produit documentaire : thèse, article, rapport, livre, etc. |
 | **Renderer / Output Capability** | capacité qui matérialise un artefact : DOCX, PDF, HTML, EPUB, LaTeX, etc. |
@@ -571,6 +577,8 @@ MDForge mature devrait permettre, sans réarchitecture, de satisfaire des intent
 
 ```text
 « Voici ce dossier Markdown ; comprends sa structure. »
+« Montre-moi comment tu comprends ce projet avant de faire quoi que ce soit. »
+« Cette arborescence représente mes chapitres et sections ; mémorise cette lecture. »
 « Forge-le comme thèse WUST en DOCX. »
 « Forge le même contenu comme rapport interne. »
 « Produit une candidate Word sans toucher au master. »
@@ -602,12 +610,16 @@ MDForge mature devrait permettre, sans réarchitecture, de satisfaire des intent
 16. **Local-first** — aucune infrastructure serveur ne doit être nécessaire pour le happy path.
 17. **Externally extensible** — un logiciel existant peut être enveloppé comme capability au lieu d'être réécrit.
 18. **Agent-parallel friendly** — deux capabilities indépendantes peuvent évoluer en parallèle sans conflit structurel récurrent.
+19. **Progressive UX** — les conventions évidentes sont détectées et proposées ; la configuration explicite n'est demandée que lorsque l'ambiguïté ou l'intention utilisateur l'exige.
+20. **Preview-first** — comprendre et confirmer la structure logique précède tout effet de compilation significatif.
 
 ## 9. Modèle mental du produit
 
 ```mermaid
 flowchart LR
-    P["Project Spec"] --> S["Source Graph"]
+    T["Physical Project Tree"] --> DISC["Discovery / Interpretation"]
+    DISC --> P["Project Spec"]
+    P --> S["Source Graph"]
     S --> D["Document Graph"]
     D --> C["Capability Graph"]
     C --> B["Build Plan"]
@@ -619,8 +631,10 @@ flowchart LR
 ### Séparations essentielles
 
 ```text
+arborescence physique       ≠ structure documentaire logique
 fichiers physiques          ≠ unités documentaires
 ordre des fichiers          ≠ structure logique
+pattern détecté             ≠ pattern confirmé
 profile                     ≠ capability
 profil de publication       ≠ format de sortie
 renderer                    ≠ post-processing
@@ -648,6 +662,147 @@ flowchart TD
 
 Aucune surface ne doit posséder de logique documentaire divergente.
 
+### 10.1 Théorème UX — Discover → Understand → Confirm → Build
+
+Le Target historique de Project Discovery révèle un cas d'usage fondamental : l'utilisateur arrive avec **un projet déjà organisé selon sa propre logique**, et attend de MDForge qu'il comprenne cette logique avant de lui demander de connaître les internals de la forge.
+
+Le happy path cible est donc :
+
+```mermaid
+flowchart LR
+    ROOT["Project directory"]
+    D["Discover"]
+    U["Understand"]
+    C["Confirm / Correct"]
+    B["Build"]
+
+    ROOT --> D
+    D --> U
+    U --> C
+    C --> B
+
+    U --> PREVIEW["Document Graph Preview"]
+    C --> PATTERN["Resolved Source Pattern"]
+```
+
+#### Discover
+
+MDForge observe sans effet destructif :
+
+```text
+répertoires
+fichiers Markdown
+niveaux de titres
+préfixes numériques
+conventions d'ignorance
+indices de chapitres / sections
+patterns déjà enregistrés
+```
+
+La découverte est une **capability remplaçable**. Le kernel ne connaît aucune convention particulière de scan.
+
+#### Understand
+
+La forge transforme les observations en une ou plusieurs **interprétations candidates** :
+
+```text
+physical tree
+→ inferred source pattern
+→ source graph
+→ document graph candidate
+→ diagnostics + confidence + ambiguities
+```
+
+Elle ne confond jamais une convention détectée avec une vérité confirmée.
+
+#### Confirm / Correct
+
+Si la lecture est évidente, l'Operator peut l'accepter immédiatement. Si elle est ambiguë, MDForge présente **le minimum de choix nécessaire**, au lieu d'exiger un fichier de configuration complet.
+
+L'utilisateur peut aussi imposer explicitement son propre `source-pattern` lorsque sa structure est particulière.
+
+Doctrine :
+
+> **convention-first, configuration-when-needed.**
+
+Le système apprend ici la lecture du **projet**, pas une règle globale imposée à tous les projets.
+
+#### Build
+
+Un build significatif part d'un **Document Graph résolu et inspectable**. Si la structure change suffisamment pour invalider l'interprétation enregistrée, MDForge doit le signaler et revalider avant un effet autoritaire.
+
+### 10.2 `mdforge inspect` comme porte d'entrée projet
+
+`mdforge inspect <project>` n'est pas seulement une commande de debug. C'est la surface de compréhension fondamentale de MDForge.
+
+Elle devrait pouvoir rendre :
+
+```text
+Project
+├── inferred / configured source pattern
+├── chapters
+│   ├── sections
+│   └── subsections
+├── ignored sources
+├── ambiguities
+├── diagnostics
+└── readiness
+```
+
+Une première expérience idéale doit pouvoir ressembler à :
+
+```text
+$ mdforge inspect .
+
+Project understood with high confidence.
+
+Chapters: 6
+Sections: 24
+Ignored sources: 3
+Ambiguities: 1
+
+Pattern inferred:
+  directory -> chapter
+  markdown file -> section
+  ## heading -> subsection
+
+Review ambiguity: Chapter 04 contains two files numbered 04_02.
+```
+
+Puis :
+
+```text
+mdforge inspect . --json
+```
+
+expose **la même vérité**, structurée pour un agent ou une automatisation.
+
+### 10.3 Parité humain / agent dès la découverte
+
+L'humain et l'agent ne disposent pas de deux moteurs de compréhension différents.
+
+```mermaid
+flowchart LR
+    H["Human CLI/UI"] --> API["Project Inspection Use Case"]
+    A["Agent / MCP"] --> API
+    API --> DISC["Discovery capabilities"]
+    DISC --> DG["Same Document Graph"]
+    DG --> H
+    DG --> A
+```
+
+Un agent doit pouvoir :
+
+```text
+inspecter le projet
+comprendre le pattern résolu
+localiser une unité documentaire
+voir les sources ignorées
+lire les ambiguïtés
+proposer une correction
+faire confirmer une interprétation avant un build autoritaire
+```
+
 ### CLI
 
 La CLI sert de **surface de référence headless** :
@@ -660,6 +815,16 @@ structurée pour les agents
 
 Chaque commande importante doit avoir une sortie humaine et, quand pertinent, une sortie machine stable (`--json` ou équivalent).
 
+La CLI doit privilégier une progression naturelle :
+
+```text
+mdforge inspect .
+→ mdforge plan .
+→ mdforge build .
+```
+
+plutôt que d'exposer d'abord la plomberie interne des capabilities.
+
 ### UI
 
 L'UI doit être un client mince de l'Application API.
@@ -668,6 +833,8 @@ Elle pourra proposer :
 
 ```text
 project cockpit
+project structure preview
+ambiguity resolver
 capability/profile explorer
 build plan preview
 artifact browser
@@ -683,6 +850,9 @@ Un agent doit pouvoir :
 
 - inspecter un projet ;
 - découvrir les capabilities disponibles ;
+- lire et expliquer le Document Graph résolu ;
+- voir les ambiguïtés avant exécution ;
+- proposer ou fournir un source pattern ;
 - obtenir un Build Plan sans exécuter ;
 - lancer un build autorisé ;
 - recevoir événements et diagnostics structurés ;
@@ -706,6 +876,8 @@ Mdforge/
 │   ├── web/                 # seulement si retenu
 │   ├── plugins/
 │   │   ├── source-markdown/
+│   │   ├── discovery-filesystem/
+│   │   ├── source-pattern/
 │   │   ├── parser-markdown/
 │   │   ├── references-csl/
 │   │   ├── renderer-docx/
@@ -728,6 +900,7 @@ flowchart LR
     A3["Agent C<br/>CLI"] --> API["Application API"]
     A4["Agent D<br/>MCP"] --> API
     A5["Agent E<br/>profile WUST"] --> CT
+    A6["Agent F<br/>project discovery"] --> CT
 
     CT --> K["Kernel"]
     API --> K
@@ -737,10 +910,11 @@ flowchart LR
 
 - aucune importation plugin→plugin par implémentation ;
 - aucun renderer connu du kernel ;
+- aucune convention de scan imposée par le kernel ;
 - contract tests obligatoires par capability ;
 - manifest valide ;
 - dépendances résolubles ;
-- build déterministe sur fixture ;
+- même project + même pattern = même Document Graph ;
 - sortie structurée stable ;
 - installation/retrait d'une capability testés ;
 - rollback lifecycle testé ;
@@ -764,6 +938,7 @@ un runtime local
 ```text
 install
 → mdforge doctor
+→ mdforge inspect .
 → mdforge build .
 ```
 
@@ -829,10 +1004,11 @@ Le Memory Diagram choisit maintenant une **baseline technologique crédible**, m
 |---|---|
 | **Kernel** | Python 3.12+ ; préciser la frontière exacte kernel/application/planner |
 | **Plugin runtime** | entry points + in-process par défaut ; définir isolation subprocess/service et lifecycle |
+| **Project Discovery** | conventions inférées + source-pattern explicite ; préciser scoring/confidence, ambiguïtés et persistance de la confirmation |
 | **Hooks** | évaluer `pluggy` uniquement là où les hooks apportent une vraie valeur |
 | **Frontend** | CLI référence ; comparer desktop native, web local et wrapper hybride |
 | **Data** | SQLite + filesystem CAS ; définir schema, GC, migrations et layering |
-| **Configuration** | `mdforge.toml` ; préciser profiles, overrides locaux, secrets et portable paths |
+| **Configuration** | `mdforge.toml` ; préciser profiles, source patterns, overrides locaux, secrets et portable paths |
 | **MCP** | SDK officiel ; préciser tools/resources, streaming, permissions et long-running builds |
 | **Distribution** | `uv`/package Python comme dev baseline ; comparer standalone executable/desktop bundle |
 | **Security** | définir trust model, filesystem/network/process scopes et sandbox des plugins externes |
@@ -855,16 +1031,25 @@ expectations
 
 ```text
 MDForge Microkernel
-  possède discovery, contracts, service context, lifecycle, composition primitives
+  possède discovery de capabilities, contracts, service context, lifecycle, composition primitives
 
 Application Core
   possède les cas d'usage et orchestration métier générique
+
+Project Discovery
+  observe une arborescence, produit des interprétations candidates et diagnostics via capabilities remplaçables
+
+Source Pattern
+  décrit explicitement ou matérialise après confirmation la lecture d'un projet
 
 Build Planner
   résout un projet + capability graph en Build Plan inspectable
 
 Project Model
-  possède l'intention documentaire déclarative et le graphe résolu
+  possède l'intention documentaire déclarative et la lecture confirmée du projet
+
+Document Graph
+  possède la structure documentaire logique indépendante du layout physique
 
 Capabilities
   possèdent le traitement spécialisé
@@ -890,11 +1075,11 @@ MCP
 Ce sont des frontières de futurs programmes, pas encore leurs plans d'implémentation :
 
 1. **Foundation & Microkernel Contracts** — capability contract, registry, service context, lifecycle, errors/events.
-2. **Project & Document Graph** — project spec, discovery, source/document model, références/assets.
+2. **Project Discovery & Document Graph** — project spec, conventions, source-pattern, discovery, diagnostics, source/document model, références/assets.
 3. **Plugin Runtime & Composition** — entry points, manifests, dependency resolution, profiles/bundles, isolation.
 4. **Build Engine & Evidence** — planner, execution, incremental/cache strategy, build record, artifact store, diagnostics.
-5. **Human Experience** — CLI référence puis meilleure surface interactive, preview et ergonomie projet.
-6. **Agent/MCP Surface** — discovery, inspection, planning, build, diagnostics, permissions et long-running work.
+5. **Human Experience** — inspect-first onboarding, CLI référence puis meilleure surface interactive, preview et ergonomie projet.
+6. **Agent/MCP Surface** — discovery, inspection, correction, planning, build, diagnostics, permissions et long-running work.
 7. **Legacy Extraction & MDDOCX Retirement** — inventory, fixtures, parity, migration, retrait du submodule.
 
 Ces familles pourront être fusionnées ou scindées après les exercices de topologie. Le présent diagramme ne fixe pas leur nombre final.
@@ -921,6 +1106,10 @@ Ces familles pourront être fusionnées ou scindées après les exercices de top
 18. MDDOCX est une source de migration temporaire, pas une dépendance architecturale permanente.
 19. Les frontières du repository doivent permettre le travail parallèle d'agents sans conflits structurels récurrents.
 20. Un choix technologique n'est gelé qu'après prototype et preuve adaptée.
+21. **Physical tree ≠ logical document graph** : l'arborescence source est une observation, jamais le modèle documentaire final.
+22. **Convention-first / configuration-when-needed** : MDForge propose une lecture quand elle peut être déduite avec confiance ; il demande ou accepte une configuration explicite lorsque nécessaire.
+23. **Preview-before-effects** : la structure logique, les ambiguïtés et diagnostics sont inspectables avant un build à effets significatifs.
+24. **Human/agent parity from discovery** : humain et agent consomment le même Project Inspection Use Case, le même Document Graph et les mêmes diagnostics.
 
 ## 18. Test du théorème
 
@@ -949,6 +1138,28 @@ Without:
 
 Cette propriété — et non le nombre de formats déjà supportés — prouve que MDForge est réellement devenu une forge modulaire.
 
+Le théorème UX doit également tenir :
+
+```text
+Given:
+  un répertoire Markdown cohérent mais encore inconnu de MDForge
+
+When:
+  humain ou agent demande son inspection
+
+Then:
+  MDForge propose une interprétation déterministe,
+  expose le Document Graph candidat,
+  signale ignorés et ambiguïtés,
+  permet confirmation ou correction,
+  et n'exige une configuration détaillée que si elle apporte réellement de l'information
+
+Without:
+  compiler pour découvrir la structure,
+  imposer une convention globale,
+  ou produire deux vérités différentes pour humain et agent.
+```
+
 ## 19. Contrôle avant toute mission d'implémentation
 
 Avant de rédiger un premier Target de code, répondre explicitement :
@@ -964,6 +1175,9 @@ Avant de rédiger un premier Target de code, répondre explicitement :
 8. L'état et les artefacts produits sont-ils traçables et reconstructibles ?
 9. Le changement peut-il être développé/testé par un agent sans toucher des modules indépendants ?
 10. Le choix technologique est-il justifié par prototype/benchmark ou seulement par préférence ?
+11. L'Operator doit-il réellement configurer cette information ou MDForge peut-il la détecter/proposer ?
+12. L'interprétation produite est-elle inspectable et corrigeable avant effets ?
+13. Humain et agent voient-ils exactement la même compréhension structurée du projet ?
 ```
 
 Si une cible force plusieurs topologies non encore prouvées en même temps, elle est trop couplée et doit être redécoupée.
@@ -978,8 +1192,11 @@ Une évolution majeure produit une nouvelle version avec `supersedes` et met à 
 
 ```mermaid
 flowchart TD
-    SRC["Markdown + assets + refs"]
+    ROOT["Physical Project Tree"]
+    DISC["Discover / Interpret"]
+    PRE["Preview + Confirm"]
     PROJ["Project Model"]
+    DOC["Document Graph"]
     PROF["Profile / Bundle"]
     K["MDForge Microkernel"]
     REG["Capability Graph"]
@@ -988,9 +1205,12 @@ flowchart TD
     ART["Artifacts"]
     REC["Build Record / Evidence"]
 
-    SRC --> PROJ
+    ROOT --> DISC
+    DISC --> PRE
+    PRE --> PROJ
+    PROJ --> DOC
     PROF --> K
-    PROJ --> K
+    DOC --> K
     K --> REG
     REG --> PLAN
     PLAN --> RUN
@@ -1001,11 +1221,14 @@ flowchart TD
 ```text
 Kernel        = composition substrate
 Capabilities  = puzzle pieces
+Discovery     = physical tree → candidate understanding
+Source Pattern= explicit or confirmed project-reading contract
+DocumentGraph = logical document truth used downstream
 Profiles      = named compositions
 Application   = common use cases
-CLI/UI/MCP    = adapters
+CLI/UI/MCP    = adapters over the same understanding
 SQLite/CAS    = lightweight operational substrate
 MDDOCX        = temporary migration oracle, then retired
 ```
 
-> **MDForge doit rendre facile l'ajout d'un nouveau fil documentaire ou d'un logiciel existant sans obliger à redessiner la forge.**
+> **MDForge doit rendre facile l'ajout d'un nouveau fil documentaire ou d'un logiciel existant sans obliger à redessiner la forge — et rendre naturel le fait de lui confier un projet sans obliger l'utilisateur à penser comme son moteur interne.**
